@@ -21,4 +21,12 @@ function hmacTest(hmac) {
     console.log('valid hmac');
 }
 
+function getDate() {
+    const date = new Date();
+    console.log('this is the date:', date);
+    const isoDate = date.toISOString();
+    console.log('this is the iso date:', isoDate);
+}
+
 hmacTest(hmac);
+getDate();
