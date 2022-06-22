@@ -10,7 +10,7 @@ function generatePayload(hmac) {
     const date = new Date();
     const isoDate = date.toISOString();
     const userName = "sign.me@ionos.com"
-    const payload = hmac + ':' + isoDate + ':' + userName;
+    const payload = hmac + '|' + isoDate + '|' + userName;
     return payload;
 }
 
@@ -21,6 +21,6 @@ exports.handler = async function (event, contect, callback) {
         return result;
     }
     const payload = generatePayload(hmac)
-    return "Payload generated:" + payload;
+    return "Payload generated: " + payload;
     // signPayload(payload)
 };
