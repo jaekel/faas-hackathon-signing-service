@@ -28,5 +28,8 @@ function getDate() {
     console.log('this is the iso date:', isoDate);
 }
 
+sign();
+  
+
 hmacTest(hmac);
 getDate();
