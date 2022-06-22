@@ -1,4 +1,4 @@
-async function generateKeys() {
+(async function generateKeys() {
     const { generateKeyPair } = await import('node:crypto');
     const { privateEncrypt } = await import('node:crypto');
     const { publicDecrypt } = await import('node:crypto');
@@ -26,9 +26,7 @@ async function generateKeys() {
     const decryptedString = decryptedBuffer.toString();
     console.log(decryptedString);
     });
-}
-
-generateKeys();
+})();
 
 // let crypto = require('crypto');
 // let fs = require('fs');

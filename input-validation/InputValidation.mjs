@@ -1,3 +1,5 @@
+import signPayload from "signPayload";
+
 function validateHMAC(hmac) {
     const regexExp = /^[a-f0-9]{64}$/gi;
     if (!regexExp.test(hmac)) {
@@ -20,7 +22,8 @@ exports.handler = async function (event, contect, callback) {
     if (result !== null) {
         return result;
     }
-    const payload = generatePayload(hmac)
-    return "Payload generated: " + payload;
-    // signPayload(payload)
+    const payload = generatePayload(hmac);
+    console.log("Payload generated: " + payload);
+    signPayload(payload);
 };
+
