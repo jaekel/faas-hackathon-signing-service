@@ -8,18 +8,19 @@ function validateHMAC(hmac) {
 
 function generatePayload(hmac) {
     const date = new Date();
-    console.log('this is the date:', date);
     const isoDate = date.toISOString();
-    console.log('this is the iso date:', isoDate);
+    const userName = "sign.me@ionos.com"
+    const payload = hmac + ':' + isoDate + ':' + userName;
+    return payload;
 }
 
 exports.handler = async function (event, contect, callback) {
     const hmac = event.hmac;
-    let result = validateHMAC(hmac);
+    const result = validateHMAC(hmac);
     if (result !== null) {
         return result;
     }
-    // payload = generatePayload(hmac)
+    const payload = generatePayload(hmac)
+    return "Payload generated:" + payload;
     // signPayload(payload)
-    return 'valid hmac';
 };
