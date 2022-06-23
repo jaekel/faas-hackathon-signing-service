@@ -53,15 +53,23 @@ exports.handler = async function (event, context, callback) {
 
     const publicKey = fs.readFileSync('public_key.pem', 'utf8');
      
-    /* decode signature from Base64 to Buffer & decrypt buffer using public key */
 
     try {
+		/* decode signature from Base64 to Buffer & decrypt buffer using public key */
         const decryptedBuffer = crypto.publicDecrypt(publicKey, Buffer.from(signature, 'base64'));
         const decryptedString = decryptedBuffer.toString();
+
+		/* Note: the above line will throw an exception of the signature
+		 * isn't valid or has been modified. See catch block for handling
+		 * this case. */
+
+		/* split payload into hmac, date and username */
         const data = decryptedString.split('|');
         let hmac = data[0];
         let isoDate = data[1];
         let username = data[2];
+
+		/* Return response */
         return {
             singatureValid: true,
             signaturePayload: {
@@ -71,22 +79,10 @@ exports.handler = async function (event, context, callback) {
             }
         };
     } catch (error) {
+	    /* decoding failed? -> return error and exit */
         return {
             message: "Wrong signature",
             singatureValid: false,
         };    
     };
-    
-    
-
-	
-
-	/* decoding failed? -> return error and exit */
-
-	/* split payload into hmac, date and username */
-
-    
-
-    /* Return response */
-    
 };
