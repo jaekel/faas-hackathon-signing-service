@@ -24,7 +24,7 @@
 /* hard-coded username for now */
 const userName = 'sign.me@ionos.com';
 let fs = require('fs');
-let crypto = require('crypto');
+const crypto = require('crypto');
 
 function validateHMAC(hmac) {
     if (hmac == null) {
@@ -42,16 +42,18 @@ function generatePayload(hmac, isoDate) {
     return payload;
 }
 
-async function signPayload(privateKey, payload) {
-    const { privateEncrypt } = await import('node:crypto');
+function signPayload(privateKey, payload) {
     // const { publicDecrypt } = await import('node:crypto');
 
-    const encryptedSignature = privateEncrypt(
+    const buff = Buffer.from(payload, 'utf-8');
+
+    const encryptedSignature = crypto.privateEncrypt(
         { key: privateKey, passphrase: '' },
-        payload
+        buff
     );
+
     console.log('encrypted payload', encryptedSignature);
-    return encryptedSignature;
+    return encryptedSignature.toString('base64');
     //const decryptedBuffer = publicDecrypt(publicKey, encryptedContent);
     //const decryptedString = decryptedBuffer.toString();
     //console.log('decrypted payload', decryptedString);
@@ -70,14 +72,15 @@ exports.handler = async function (event, context, callback) {
     const payload = generatePayload(hmac, isoDate);
 
     /* sign the record */
-    let privateKey = fs.readFileSync('/home/www/private_key.pem', 'utf8');
+    let privateKey = fs.readFileSync('private_key.pem', 'utf8');
+
+    const signature = signPayload(privateKey, payload);
 
     /* Return response */
     return {
         hmac: hmac,
         date: isoDate,
         username: userName,
-        signature: encryptedSignature,
-        payload: payload,
+        signature: signature,
     };
 };
