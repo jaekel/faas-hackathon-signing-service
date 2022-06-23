@@ -50,7 +50,7 @@ exports.handler = async function(event, context, callback) {
 
 	/* generate signature record */
     const isoDate = new Date().toISOString();
-    const payload = generatePayload(hmac);
+    const payload = generatePayload(hmac, isoDate);
 
 	/* sign the record */
 	let privateKey = fs.readFileSync(path.join(__dirname,
