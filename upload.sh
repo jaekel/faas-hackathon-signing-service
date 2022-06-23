@@ -40,10 +40,10 @@ fi
 rm -f .tmp.zip
 
 zip .tmp.zip $@ > /dev/null
-DATA=`base64 -w 0 .tmp.zip`
+DATA=`base64 -w 0 .tmp.zip 2> /dev/null`
 if [[ ! "$?" -eq "0" ]]; then
-		DATA=`base64 .tmp.zip`
+		DATA=`base64 .tmp.zip 2> /dev/null`
 fi
-curl -s -X PUT --header "api-key: ${FAAS_API_KEY}" https://staging-api.cm4all.works/v1/functions/${FAAS_PRODUCT_ID}/functions/${FUNCTION_NAME}/code -H "Content-Type: application/json" -d "{ \"ZipFile\": \"${DATA}\" }" # > /dev/null
+curl -s -X PUT --header "api-key: ${FAAS_API_KEY}" https://staging-api.cm4all.works/v1/functions/${FAAS_PRODUCT_ID}/functions/${FUNCTION_NAME}/code -H "Content-Type: application/json" -d "{ \"ZipFile\": \"${DATA}\" }" > /dev/null
 rm -f .tmp.zip
 
