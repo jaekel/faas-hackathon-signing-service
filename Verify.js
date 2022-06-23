@@ -63,7 +63,7 @@ exports.handler = async function (event, context, callback) {
 		signaturePayload: {
         	hmac: hmac,
         	date: isoDate,
-        	username: userName
+        	username: username
 		}
     };
 };
