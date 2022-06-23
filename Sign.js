@@ -53,7 +53,8 @@ exports.handler = async function(event, context, callback) {
     const payload = generatePayload(hmac);
 
 	/* sign the record */
-	// XXX TODO
+	let privateKey = fs.readFileSync(path.join(__dirname,
+                          'private_key'), 'utf8');
 
 	/* Return response */
 	return {
@@ -61,7 +62,8 @@ exports.handler = async function(event, context, callback) {
 		"date": isoDate,
 		"username": userName,
 		"signature": "<TBD>",
-		"payload": payload
+		"payload": payload,
+		"privateKey": privateKey
 	};
 };
 

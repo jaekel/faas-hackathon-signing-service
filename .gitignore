@@ -104,3 +104,5 @@ dist
 .tern-port
 
 ./input-validation/input-validation.zip
+private_key.pem
+public_key.pem
