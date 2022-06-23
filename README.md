@@ -1,2 +1,27 @@
 # faas-hackathon-signing-service
-Functions to sign and timestamp data and verify the signatures.
+
+1.Short summary:
+
+This is an implementation of an hmac signing as a FaaS service on the cm4all
+FaaS platform. It is intended for the verification of any binary data with the sha256-hmac algorithm method. In order to use this project, we require the user to create an hmac-string for the desired data.
+
+This project is set up with Node.js without any npm dependencies.
+
+2.Implementation:
+
+Three faas-function are used: sign, verify and inform:
+
+sign
+
+After receiving the hmac-string through a form submit event, an ISO-8601 time stamp is created.The hmac-string is being validated. Together with the (for now hard coded) user name the payload is created.
+
+An rsa-generated public and privated key are generated and add up the desired signature.
+
+The signature is handed out to the user.
+
+verify
+
+The verify function receives the signature as a parameter.
+The signature gets decoded using the public key and returns true in case that signature and user data match.
+
+inform

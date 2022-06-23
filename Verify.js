@@ -44,45 +44,48 @@ function validateSignatureRecord(signature) {
 
 exports.handler = async function (event, context, callback) {
     /* verify input parameters */
+
     const signature = event.signature;
     const validationResult = validateSignatureRecord(signature);
     if (validationResult !== null) {
         return validationResult;
-    };
-
+    }
 
     const publicKey = fs.readFileSync('public_key.pem', 'utf8');
-     
 
+    /* decode signature from Base64 to Buffer & decrypt buffer using public key */
     try {
-		/* decode signature from Base64 to Buffer & decrypt buffer using public key */
-        const decryptedBuffer = crypto.publicDecrypt(publicKey, Buffer.from(signature, 'base64'));
+        /* decode signature from Base64 to Buffer & decrypt buffer using public key */
+        const decryptedBuffer = crypto.publicDecrypt(
+            publicKey,
+            Buffer.from(signature, 'base64')
+        );
         const decryptedString = decryptedBuffer.toString();
 
-		/* Note: the above line will throw an exception of the signature
-		 * isn't valid or has been modified. See catch block for handling
-		 * this case. */
+        /* Note: the above line will throw an exception of the signature
+         * isn't valid or has been modified. See catch block for handling
+         * this case. */
 
-		/* split payload into hmac, date and username */
+        /* split payload into hmac, date and username */
         const data = decryptedString.split('|');
         let hmac = data[0];
         let isoDate = data[1];
         let username = data[2];
 
-		/* Return response */
+        /* Return response */
         return {
             singatureValid: true,
             signaturePayload: {
                 hmac: hmac,
                 date: isoDate,
-                username: username
-            }
+                username: username,
+            },
         };
     } catch (error) {
-	    /* decoding failed? -> return error and exit */
+        /* decoding failed? -> return error and exit */
         return {
-            message: "Wrong signature",
+            message: 'Wrong signature',
             singatureValid: false,
-        };    
-    };
+        };
+    }
 };
