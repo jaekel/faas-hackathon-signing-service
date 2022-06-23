@@ -59,8 +59,8 @@ function signPayload(privateKey, payload) {
 exports.handler = async function (event, context, callback) {
     /* verify input parameters */
     const hmac = event.hmac;
-    const result = validateHMAC(hmac);
-    if (result !== null) {
+    const validationResult = validateHMAC(hmac);
+    if (validationResult !== null) {
         return result;
     }
 
@@ -69,7 +69,7 @@ exports.handler = async function (event, context, callback) {
     const payload = generatePayload(hmac, isoDate);
 
     /* sign (encrypt) the record */
-    let privateKey = fs.readFileSync('private_key.pem', 'utf8');
+    const privateKey = fs.readFileSync('private_key.pem', 'utf8');
     const signature = signPayload(privateKey, payload);
 
     /* Return response */

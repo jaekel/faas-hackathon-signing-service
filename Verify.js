@@ -35,7 +35,7 @@ function validateSignatureRecord(signature) {
     if (signature == null) {
         return 'Signature parameter is missing.';
     }
-    const regexExp = /^[a-f0-9=]*$/gi;
+    const regexExp = /^[a-zA-Z0-9=\/\n \+]*$/gi;
     if (!regexExp.test(signature)) {
         return 'Invalid input string';
     }
@@ -45,25 +45,47 @@ function validateSignatureRecord(signature) {
 exports.handler = async function (event, context, callback) {
     /* verify input parameters */
     const signature = event.signature;
-	let hmac = "<tbd>";
-	let isoDate = "<tbd>";
-	let username = "<tbd>";
+    const validationResult = validateSignatureRecord(signature);
+    if (validationResult !== null) {
+        return validationResult;
+    };
 
-    /* decode signature from Base64 to Buffer */
 
-	/* decrypt buffer using public key */
+    const publicKey = fs.readFileSync('public_key.pem', 'utf8');
+     
+    /* decode signature from Base64 to Buffer & decrypt buffer using public key */
+
+    try {
+        const decryptedBuffer = crypto.publicDecrypt(publicKey, Buffer.from(signature, 'base64'));
+        const decryptedString = decryptedBuffer.toString();
+        let hmac = "<tbd>";
+        let isoDate = "<tbd>";
+        let username = "<tbd>";
+        return {
+            decryptedString: decryptedString,
+            singatureValid: true,
+            signaturePayload: {
+                hmac: hmac,
+                date: isoDate,
+                username: username
+            }
+        };
+    } catch (error) {
+        return {
+            message: "Wrong signature",
+        };    
+    };
+    
+    
+
+	
 
 	/* decoding failed? -> return error and exit */
 
 	/* split payload into hmac, date and username */
 
+    
+
     /* Return response */
-    return {
-		singatureValid: true,
-		signaturePayload: {
-        	hmac: hmac,
-        	date: isoDate,
-        	username: username
-		}
-    };
+    
 };
