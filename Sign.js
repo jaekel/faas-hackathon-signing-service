@@ -22,14 +22,14 @@
  */
 
 /* hard-coded username for now */
-const userName = "sign.me@ionos.com"
+const userName = 'sign.me@ionos.com';
 let fs = require('fs');
 let crypto = require('crypto');
 
 function validateHMAC(hmac) {
-	if (hmac == null) {
-			return "HMAC parameter is missing.";
-	}
+    if (hmac == null) {
+        return 'HMAC parameter is missing.';
+    }
     const regexExp = /^[a-f0-9]{64}$/gi;
     if (!regexExp.test(hmac)) {
         return 'Invalid input string';
@@ -42,28 +42,42 @@ function generatePayload(hmac, isoDate) {
     return payload;
 }
 
-exports.handler = async function(event, context, callback) {
-	/* verify input parameters */
+async function signPayload(privateKey, payload) {
+    const { privateEncrypt } = await import('node:crypto');
+    // const { publicDecrypt } = await import('node:crypto');
+
+    const encryptedSignature = privateEncrypt(
+        { key: privateKey, passphrase: '' },
+        payload
+    );
+    console.log('encrypted payload', encryptedSignature);
+    return encryptedSignature;
+    //const decryptedBuffer = publicDecrypt(publicKey, encryptedContent);
+    //const decryptedString = decryptedBuffer.toString();
+    //console.log('decrypted payload', decryptedString);
+}
+
+exports.handler = async function (event, context, callback) {
+    /* verify input parameters */
     const hmac = event.hmac;
     const result = validateHMAC(hmac);
     if (result !== null) {
         return result;
     }
 
-	/* generate signature record */
+    /* generate signature record */
     const isoDate = new Date().toISOString();
     const payload = generatePayload(hmac, isoDate);
 
-	/* sign the record */
-	let privateKey = fs.readFileSync('/home/www/private_key.pem', 'utf8');
+    /* sign the record */
+    let privateKey = fs.readFileSync('/home/www/private_key.pem', 'utf8');
 
-	/* Return response */
-	return {
-		"hmac": hmac,
-		"date": isoDate,
-		"username": userName,
-		"signature": "<TBD>",
-		"payload": payload,
-	};
+    /* Return response */
+    return {
+        hmac: hmac,
+        date: isoDate,
+        username: userName,
+        signature: encryptedSignature,
+        payload: payload,
+    };
 };
-
