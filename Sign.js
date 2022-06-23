@@ -23,6 +23,8 @@
 
 /* hard-coded username for now */
 const userName = "sign.me@ionos.com"
+let fs = require('fs');
+let crypto = require('crypto');
 
 function validateHMAC(hmac) {
 	if (hmac == null) {
@@ -53,8 +55,7 @@ exports.handler = async function(event, context, callback) {
     const payload = generatePayload(hmac, isoDate);
 
 	/* sign the record */
-	let privateKey = fs.readFileSync(path.join(__dirname,
-                          'private_key'), 'utf8');
+	let privateKey = fs.readFileSync('/home/www/private_key.pem', 'utf8');
 
 	/* Return response */
 	return {
@@ -63,7 +64,6 @@ exports.handler = async function(event, context, callback) {
 		"username": userName,
 		"signature": "<TBD>",
 		"payload": payload,
-		"privateKey": privateKey
 	};
 };
 
