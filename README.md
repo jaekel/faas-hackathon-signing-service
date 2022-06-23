@@ -27,3 +27,5 @@ The signature gets decoded using the public key and returns true in case that si
 info
 
 The info returns the public key.
+
+This project also includes a script for automatic zip file creation and upload.
