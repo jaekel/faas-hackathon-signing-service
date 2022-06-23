@@ -45,10 +45,9 @@ function validateSignatureRecord(signature) {
 exports.handler = async function (event, context, callback) {
     /* verify input parameters */
     const signature = event.signature;
-    const result = validateSignature(signature);
-    if (result !== null) {
-        return result;
-    }
+	let hmac = "<tbd>";
+	let isoDate = "<tbd>";
+	let username = "<tbd>";
 
     /* decode signature from Base64 to Buffer */
 
@@ -61,7 +60,7 @@ exports.handler = async function (event, context, callback) {
     /* Return response */
     return {
 		singatureValid: true,
-		{
+		signaturePayload: {
         	hmac: hmac,
         	date: isoDate,
         	username: userName
