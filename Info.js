@@ -1,9 +1,9 @@
 /* Info.js
  *
- * Implementation of info endpoint to provide the public keu.
+ * Implementation of info endpoint to provide the public key.
  *
  * This code requires the presence of a public key for signing
- * in the same directory. The filenam should be "public_key.pem".
+ * in the same directory. The filename should be "public_key.pem".
  */
 
 /*
@@ -17,10 +17,9 @@
 const fs = require('fs');
 
 exports.handler = async function (event, context, callback) {
-
     const publicKey = fs.readFileSync('public_key.pem', 'utf8');
 
     return {
-		publicKey: publicKey
+        publicKey: publicKey,
     };
 };

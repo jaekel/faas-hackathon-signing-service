@@ -9,19 +9,21 @@ This project is set up with Node.js without any npm dependencies.
 
 2.Implementation:
 
-Three faas-function are used: sign, verify and inform:
+Three faas-function are used: sign, verify and info:
 
 sign
 
 After receiving the hmac-string through a form submit event, an ISO-8601 time stamp is created.The hmac-string is being validated. Together with the (for now hard coded) user name the payload is created.
 
-An rsa-generated public and privated key are generated and add up the desired signature.
+An rsa-generated public and private key are generated and add up the desired signature.
 
 The signature is handed out to the user.
 
 verify
 
 The verify function receives the signature as a parameter.
-The signature gets decoded using the public key and returns true in case that signature and user data match.
+The signature gets decoded using the public key and returns true in case that signature and user data match. Payload data is returned as a response.
 
-inform
+info
+
+The info returns the public key.
