@@ -58,11 +58,11 @@ exports.handler = async function (event, context, callback) {
     try {
         const decryptedBuffer = crypto.publicDecrypt(publicKey, Buffer.from(signature, 'base64'));
         const decryptedString = decryptedBuffer.toString();
-        let hmac = "<tbd>";
-        let isoDate = "<tbd>";
-        let username = "<tbd>";
+        const data = decryptedString.split('|');
+        let hmac = data[0];
+        let isoDate = data[1];
+        let username = data[2];
         return {
-            decryptedString: decryptedString,
             singatureValid: true,
             signaturePayload: {
                 hmac: hmac,
@@ -73,6 +73,7 @@ exports.handler = async function (event, context, callback) {
     } catch (error) {
         return {
             message: "Wrong signature",
+            singatureValid: false,
         };    
     };
     
